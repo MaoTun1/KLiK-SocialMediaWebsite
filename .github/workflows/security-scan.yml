@@ -1,5 +1,5 @@
 name: Security Scanning (SAST + Dependency)
-
+#deneme
 on:
   push:
     branches: [ main ]
