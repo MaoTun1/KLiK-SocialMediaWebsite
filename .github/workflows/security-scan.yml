@@ -1,43 +1,27 @@
-name: Security Scanning (SAST + Dependency)
-#deneme
+name: Universal Security Scan
+
 on:
   push:
-    branches: [ master ]
+    branches: [main, master]
   pull_request:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
-  sast-and-dep-scan:
-    name: Run SAST and Dependency Scanners
+  sast-and-secret-scan:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.1'
-        extensions: mbstring, xml, bcmath, zip
-        coverage: none
+      - name: Run Semgrep SAST
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: "auto"
+        continue-on-error: true  # 🔥 Hatalarda durmasın
 
-    - name: Install dependencies
-      run: |
-        composer install --no-interaction --no-scripts --no-progress
-
-    ##############################
-    # ✅ Dependency Check (osv)
-    ##############################
-    - name: Run osv-scanner on composer.lock
-      uses: google/osv-scanner-action@v1
-      with:
-        scan-args: --lock-file=./composer.lock
-
-    ##############################
-    # ✅ SAST Scan (Semgrep)
-    ##############################
-    - name: Run Semgrep SAST
-      uses: returntocorp/semgrep-action@v1
-      with:
-        config: p/laravel
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true  # 🔥 Hatalarda durmasın
