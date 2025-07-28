@@ -1,0 +1,201 @@
+<h1 id="security-scan-report">🔐 Security Scan Report</h1>
+<h2 id="semgrep-findings">🧠 Semgrep Findings</h2>
+<pre><code>                    
+                    
+┌──────────────────┐
+│ 33 Code Findings │
+└──────────────────┘
+                               
+    PHPMailer/src/PHPMailer.php
+   ❯❯❱ php.lang.security.exec-use.exec-use
+          Executing non-constant commands. This can lead to command injection.
+          Details: https://sg.run/5Q1j                                        
+                                                                              
+          1568┆ $mail = @popen($sendmail, &#39;w&#39;);
+            ⋮┆----------------------------------------
+          1591┆ $mail = @popen($sendmail, &#39;w&#39;);
+   
+    ❯❱ php.lang.security.unlink-use.unlink-use
+          Using user input when deleting files with `unlink()` is potentially dangerous. A malicious actor
+          could use this to modify or access files they have no right to.                                 
+          Details: https://sg.run/rYeR                                                                    
+                                                                                                          
+          2658┆ @unlink($file);
+            ⋮┆----------------------------------------
+          2661┆ @unlink($signed);
+            ⋮┆----------------------------------------
+          2667┆ @unlink($signed);
+                                 
+    includes/get_message_ajax.php
+   ❯❯❱ php.lang.security.injection.tainted-sql-string.tainted-sql-string
+          User data flows into this manually-constructed SQL string. User data can be safely inserted into SQL
+          strings using prepared statements or an object-relational mapper (ORM). Manually-constructed SQL    
+          strings is a possible indicator of SQL injection, which could let an attacker steal or manipulate   
+          data from the database. Instead, use prepared statements (`$mysqli-&gt;prepare(&quot;INSERT INTO test(id,   
+          label) VALUES (?, ?)&quot;);`) or a safe library.                                                        
+          Details: https://sg.run/lZYG                                                                        
+                                                                                                              
+            7┆ $q = mysqli_query($conn, &quot;SELECT * FROM messages WHERE conversation_id =
+               &quot;.$conversation_id);                                                    
+            ⋮┆----------------------------------------
+           17┆ $user = mysqli_query($conn, &quot;SELECT uidUsers, userImg FROM users WHERE idUsers =
+               &#39;$user_form&#39;&quot;);                                                                 
+                              
+    includes/klik_database.sql
+   ❯❯❱ generic.secrets.security.detected-bcrypt-hash.detected-bcrypt-hash
+          bcrypt hash detected        
+          Details: https://sg.run/3A8G
+                                      
+          592┆ (1, &#39;owaisrehman110@gmail.com&#39;, &#39;73abf7a3e5e48bce&#39;,                           
+               &#39;$2y$10$9ytyvfXk8gb8gRzVfRglwevJBy6o46WDrp2ncNj58Y8sjWM4iNSTi&#39;, &#39;1543912151&#39;),
+            ⋮┆----------------------------------------
+          593┆ (2, &#39;&#39;, &#39;459ea1feb0d537ee&#39;, &#39;$2y$10$jlC8JTnnikaZ7.4g4UMIHeIlqgJfe3iA4OFlruh5OQNtWVf1FfZqi&#39;,
+               &#39;1545078648&#39;),                                                                             
+            ⋮┆----------------------------------------
+          594┆ (4, &#39;asd@as.asd&#39;, &#39;fb72aeade725bc83&#39;,                                         
+               &#39;$2y$10$HTEtmrlaWZpcspmoFAa90Owrd5V4UDorSyWapnRzGOjqxFkHKTexC&#39;, &#39;1545079924&#39;),
+            ⋮┆----------------------------------------
+          595┆ (5, &#39;a@a.a&#39;, &#39;4c5a0e6dcd3aa696&#39;,                                              
+               &#39;$2y$10$R6lxGNFwcrf0t3/onGFqseQNxzrYzsimBUU23k7XKUONE3rUZaTrm&#39;, &#39;1545079978&#39;),
+            ⋮┆----------------------------------------
+          596┆ (11, &#39;muhammadsaad.crytek@gmail.com&#39;, &#39;34219d525a406a67&#39;,                     
+               &#39;$2y$10$TK.dVQ7B3Ulq95R.dCUdY.YLYAPOJBX8HDUiJW4CmEutkqg63BFQi&#39;, &#39;1545915863&#39;),
+            ⋮┆----------------------------------------
+          597┆ (12, &#39;pureliquid1999@gmail.com&#39;, &#39;74e3d2f2db2cb3e3&#39;,                          
+               &#39;$2y$10$uB4kDEYHvlLk13irN3A/dOL7t6h.i6GKW8eXKZ3v2azUnlABXl.NW&#39;, &#39;1545915911&#39;),
+            ⋮┆----------------------------------------
+          598┆ (13, &#39;ms.merium.fatima@gmail.com&#39;, &#39;62564c5e753b0ad3&#39;,                        
+               &#39;$2y$10$xBW5MsGZMevV8her23zBz.2qsJrWuLgtb.ThBiyUssPsy9tioShmi&#39;, &#39;1546003625&#39;);
+            ⋮┆----------------------------------------
+          654┆ (24, 1, &#39;Crazy&#39;, &#39;Programmer&#39;, &#39;saad&#39;, &#39;muhammadsaad.crytek@gmail.com&#39;,                   
+               &#39;$2y$10$NlmqH7ELe9VUFwLqWuFcv.2Js/8jJ36Jga3KWYvXFuaaQN4CzaEtO&#39;, &#39;m&#39;, &#39;CEO of Google and   
+               Tesla (Elon is my wife)&#39;, &#39;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
+               nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute   
+               irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla        
+               pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia       
+               deserunt mollit anim id est laborum.&#39;, &#39;5c2268b62fa342.98640611.jpg&#39;),                    
+            ⋮┆----------------------------------------
+          655┆ (25, 0, &#39;&#39;, &#39;&#39;, &#39;sadcat&#39;, &#39;a@a.a&#39;,                                          
+               &#39;$2y$10$RiiU91TqjjVhPdVpypQBtuq0etClplrZ3HNTLPFrUheJ.sy7ZifwK&#39;, &#39;f&#39;, &#39;&#39;, &#39;&#39;,
+               &#39;5bf28f767563d4.32287587.jpg&#39;),                                             
+            ⋮┆----------------------------------------
+          656┆ (26, 0, &#39;&#39;, &#39;&#39;, &#39;crazyblogger&#39;, &#39;aaa@gmail.com&#39;,                            
+               &#39;$2y$10$zXwVteLyKxjwSMDk.a8/HeoYzmfFInzvftURiCyt27z03mgbdkSNy&#39;, &#39;m&#39;, &#39;&#39;, &#39;&#39;,
+               &#39;5c2097e915f3e7.13501262.jpg&#39;),                                             
+            ⋮┆----------------------------------------
+          657┆ (27, 0, &#39;&#39;, &#39;&#39;, &#39;vegetapoopoo&#39;, &#39;asd@asd.asd&#39;,                              
+               &#39;$2y$10$S4X2HZUWyQXV7zLwirj2dOBVEbDHFDhsX6y91asglNa6QBnlq9ik.&#39;, &#39;f&#39;, &#39;&#39;, &#39;&#39;,
+               &#39;5bf2ebf077fb14.69408796.gif&#39;),                                             
+            ⋮┆----------------------------------------
+          658┆ (29, 0, &#39;&#39;, &#39;&#39;, &#39;yhamster&#39;, &#39;anas.tasadduq@gmail.com&#39;,                      
+               &#39;$2y$10$j5scT2dgJuZGBBYBFRsKVe.n50dLCjdYvcpY1Vy1.jES8f6ojulAi&#39;, &#39;m&#39;, &#39;&#39;, &#39;&#39;,
+               &#39;5c03ad0de59709.45156405.jpg&#39;),                                             
+            ⋮┆----------------------------------------
+          659┆ (30, 0, &#39;&#39;, &#39;&#39;, &#39;Owais&#39;, &#39;owaisrehman110@gmail.com&#39;,                        
+               &#39;$2y$10$EM.p1ed./gfrenQRn5Je1etujHptdTebKy8fgDU0de1wGqQvOOCcK&#39;, &#39;m&#39;, &#39;&#39;, &#39;&#39;,
+               &#39;default.png&#39;),                                                             
+            ⋮┆----------------------------------------
+          660┆ (31, 0, &#39;&#39;, &#39;&#39;, &#39;constipated&#39;, &#39;was@was.was&#39;,                             
+               &#39;$2y$10$BnAjjEdfYa0koUab7jB2wuK/Hw5PEoRHMsIjuPOgFDK3umLLPnE2a&#39;, &#39;m&#39;, &#39;&#39;, &#39;
+               Tell people about yourself\r\n                            &#39;,              
+               &#39;5c2099a0e98e21.69993944.jpg&#39;),                                           
+            ⋮┆----------------------------------------
+          661┆ (32, 0, &#39;burhan&#39;, &#39;ahmed&#39;, &#39;progamer&#39;, &#39;qq@qq.qq&#39;,                                         
+               &#39;$2y$10$9RwEOoQi4i7BHcVuN9sihOQ156yAqPOi1/cGayAc83glZMUJ8B702&#39;, &#39;f&#39;, &#39;what to do with      
+               myself&#39;, &#39;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+               aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&#39;,                         
+               &#39;5c1b521a779e33.90465765.jpg&#39;),                                                            
+            ⋮┆----------------------------------------
+          662┆ (33, 0, &#39;soSaad&#39;, &#39;Seriously&#39;, &#39;sad&#39;, &#39;sad@sad.sad&#39;,                        
+               &#39;$2y$10$MgXJs2KXFHDywcokNF.Ya.FubCPFkCV5WhvpzyDw7KioB.hImzjpS&#39;, &#39;m&#39;, &#39;&#39;, &#39;&#39;,
+               &#39;5c1e837c23fbd4.49025477.jpg&#39;),                                             
+            ⋮┆----------------------------------------
+          663┆ (34, 0, &#39;aass&#39;, &#39;aass&#39;, &#39;designer&#39;, &#39;sss@sss.sss&#39;,                                         
+               &#39;$2y$10$a/DczAbcWogc9E.QVtQ27uaIaQKIY.qi.d7OSyOI/XHT.g.DCF0XG&#39;, &#39;f&#39;, &#39;hallo hallo&#39;, &#39;pls go
+               die, seriously&#39;, &#39;5c20049a28f083.62453939.jpg&#39;),                                           
+            ⋮┆----------------------------------------
+          664┆ (35, 0, &#39;Anas&#39;, &#39;Tasadduq&#39;, &#39;aitasadduq&#39;, &#39;atasadduq.bese17seecs@seecs.edu.pk&#39;,       
+               &#39;$2y$10$mE..r1B9evnZeZ03CRmChO6hOCzWyzSOiciIjvYynq4atCtWBZtfy&#39;, &#39;m&#39;, &#39;I\&#39;m great!&#39;, &#39;I
+               don\&#39;t really want to tell much about myself...&#39;, &#39;5c207f31c827d2.61541321.jpg&#39;),     
+            ⋮┆----------------------------------------
+          665┆ (36, 0, &#39;Ubaid&#39;, &#39;Asim&#39;, &#39;UbaidAsim&#39;, &#39;ubaidasim514@gmail.com&#39;,                         
+               &#39;$2y$10$mJY/nezYA6PXFy0t.xXMyuVQOAdLi5I/ag.SWwUVFvHkZGcfqwd3S&#39;, &#39;m&#39;, &#39;Freelance Graphics
+               and Brand Designer, Social Media Strategist&#39;, &#39;Software Engineering Student at SEECS,   
+               NUST&#39;, &#39;5c207f7341e066.29286370.jpg&#39;),                                                  
+            ⋮┆----------------------------------------
+          666┆ (37, 0, &#39;Syed&#39;, &#39;Kamal&#39;, &#39;syedanaskamal&#39;, &#39;syedanaskamal@gmail.com&#39;,                
+               &#39;$2y$10$.fUUvM3BoaCPV9Blp8CobONwQpI1r6kSUnts.QTm3a9Yovo5le.N6&#39;, &#39;m&#39;, &#39;wassup&#39;, &#39;no&#39;,
+               &#39;default.png&#39;),                                                                     
+            ⋮┆----------------------------------------
+          667┆ (38, 0, &#39;&#39;, &#39;&#39;, &#39;testuser&#39;, &#39;testuser@test.com&#39;,                            
+               &#39;$2y$10$80YI6fiwFyOLHhn4CIOG/.xSAmkvG1L12LHGXjlNMdjwxeQCx/GNy&#39;, &#39;m&#39;, &#39;&#39;, &#39;&#39;,
+               &#39;5c20b68db30f81.29224418.jpg&#39;),                                             
+            ⋮┆----------------------------------------
+          668┆ (39, 0, &#39;&#39;, &#39;&#39;, &#39;marium&#39;, &#39;ms.merium.fatima@gmail.com&#39;,                     
+               &#39;$2y$10$l0AOTRif1CfL7pONxdOxHuyg4worYd4yagtUcom9u/LPeQs6n4ZN2&#39;, &#39;f&#39;, &#39;&#39;, &#39;&#39;,
+               &#39;default.png&#39;);                                                             
+                          
+    js/bootstrap.bundle.js
+    ❯❱ javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
+          RegExp() called with a `configTypes` function argument, this might allow an attacker to cause a     
+          Regular Expression Denial-of-Service (ReDoS) within your application as RegExP blocks the main      
+          thread. For this reason, it is recommended to use hardcoded regexes instead. If your regex is run on
+          user-controlled input, consider performing input validation or use a regex checking/sanitization    
+          library such as https://www.npmjs.com/package/recheck to verify that the regex does not appear      
+          vulnerable to ReDoS.                                                                                
+          Details: https://sg.run/gr65                                                                        
+                                                                                                              
+          191┆ if (!new RegExp(expectedTypes).test(valueType)) {
+                   
+    js/bootstrap.js
+    ❯❱ javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
+          RegExp() called with a `configTypes` function argument, this might allow an attacker to cause a     
+          Regular Expression Denial-of-Service (ReDoS) within your application as RegExP blocks the main      
+          thread. For this reason, it is recommended to use hardcoded regexes instead. If your regex is run on
+          user-controlled input, consider performing input validation or use a regex checking/sanitization    
+          library such as https://www.npmjs.com/package/recheck to verify that the regex does not appear      
+          vulnerable to ReDoS.                                                                                
+          Details: https://sg.run/gr65                                                                        
+                                                                                                              
+          192┆ if (!new RegExp(expectedTypes).test(valueType)) {
+             
+    posts.php
+   ❯❯❱ php.lang.security.injection.tainted-sql-string.tainted-sql-string
+          User data flows into this manually-constructed SQL string. User data can be safely inserted into SQL
+          strings using prepared statements or an object-relational mapper (ORM). Manually-constructed SQL    
+          strings is a possible indicator of SQL injection, which could let an attacker steal or manipulate   
+          data from the database. Instead, use prepared statements (`$mysqli-&gt;prepare(&quot;INSERT INTO test(id,   
+          label) VALUES (?, ?)&quot;);`) or a safe library.                                                        
+          Details: https://sg.run/lZYG                                                                        
+                                                                                                              
+          211┆ echo &#39;&lt;a href=&quot;includes/delete-                                              
+               post.php?topic=&#39;.$topic.&#39;&amp;post=&#39;.$row[&#39;post_id&#39;].&#39;&amp;by=&#39;.$row[&#39;post_by&#39;].&#39;&quot; &gt;&#39;
+          212┆     . &#39;&lt;i class=&quot;fa fa-trash fa-2x&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/a&gt;&lt;br&gt;&#39;;
+               
+    profile.php
+   ❯❯❱ php.lang.security.injection.tainted-sql-string.tainted-sql-string
+          User data flows into this manually-constructed SQL string. User data can be safely inserted into SQL
+          strings using prepared statements or an object-relational mapper (ORM). Manually-constructed SQL    
+          strings is a possible indicator of SQL injection, which could let an attacker steal or manipulate   
+          data from the database. Instead, use prepared statements (`$mysqli-&gt;prepare(&quot;INSERT INTO test(id,   
+          label) VALUES (?, ?)&quot;);`) or a safe library.                                                        
+          Details: https://sg.run/lZYG                                                                        
+                                                                                                              
+           23┆ $sql = &quot;select * from users where idUsers = &quot;.$userid;
+</code></pre>
+<h2 id="gitleaks-secrets">🕵️‍♂️ Gitleaks Secrets</h2>
+<p>No secrets found ✅ ## 🔍 TruffleHog History No history secrets found
+✅ ## 📦 Trivy Dependency Scan</p>
+<pre><code>
+Report Summary
+
+┌────────┬──────┬─────────────────┬─────────┐
+│ Target │ Type │ Vulnerabilities │ Secrets │
+├────────┼──────┼─────────────────┼─────────┤
+│   -    │  -   │        -        │    -    │
+└────────┴──────┴─────────────────┴─────────┘
+Legend:
+- &#39;-&#39;: Not scanned
+- &#39;0&#39;: Clean (no security findings detected)
+</code></pre>
